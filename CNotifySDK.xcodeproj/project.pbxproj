@@ -9,12 +9,20 @@
 /* Begin PBXBuildFile section */
 		E76938922C987EDB00C9F9C6 /* CNotifySDK.docc in Sources */ = {isa = PBXBuildFile; fileRef = E76938912C987EDB00C9F9C6 /* CNotifySDK.docc */; };
 		E76938932C987EDB00C9F9C6 /* CNotifySDK.h in Headers */ = {isa = PBXBuildFile; fileRef = E76938902C987EDB00C9F9C6 /* CNotifySDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E769389A2C987F8C00C9F9C6 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76938992C987F8C00C9F9C6 /* main.swift */; };
+		E769389D2C98818D00C9F9C6 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E769389C2C98818D00C9F9C6 /* FirebaseAnalytics */; };
+		E769389F2C98818D00C9F9C6 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = E769389E2C98818D00C9F9C6 /* FirebaseInAppMessaging-Beta */; };
+		E76938A12C98818D00C9F9C6 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = E76938A02C98818D00C9F9C6 /* FirebaseMessaging */; };
+		E76938A32C98818D00C9F9C6 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = E76938A22C98818D00C9F9C6 /* FirebaseRemoteConfig */; };
+		E76938A52C98933200C9F9C6 /* topic_generator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76938A42C98933200C9F9C6 /* topic_generator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E769388D2C987EDB00C9F9C6 /* CNotifySDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CNotifySDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E76938902C987EDB00C9F9C6 /* CNotifySDK.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CNotifySDK.h; sourceTree = "<group>"; };
 		E76938912C987EDB00C9F9C6 /* CNotifySDK.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = CNotifySDK.docc; sourceTree = "<group>"; };
+		E76938992C987F8C00C9F9C6 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		E76938A42C98933200C9F9C6 /* topic_generator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = topic_generator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -22,6 +30,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E76938A12C98818D00C9F9C6 /* FirebaseMessaging in Frameworks */,
+				E769389D2C98818D00C9F9C6 /* FirebaseAnalytics in Frameworks */,
+				E769389F2C98818D00C9F9C6 /* FirebaseInAppMessaging-Beta in Frameworks */,
+				E76938A32C98818D00C9F9C6 /* FirebaseRemoteConfig in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,6 +61,8 @@
 			children = (
 				E76938902C987EDB00C9F9C6 /* CNotifySDK.h */,
 				E76938912C987EDB00C9F9C6 /* CNotifySDK.docc */,
+				E76938992C987F8C00C9F9C6 /* main.swift */,
+				E76938A42C98933200C9F9C6 /* topic_generator.swift */,
 			);
 			path = CNotifySDK;
 			sourceTree = "<group>";
@@ -81,6 +95,12 @@
 			dependencies = (
 			);
 			name = CNotifySDK;
+			packageProductDependencies = (
+				E769389C2C98818D00C9F9C6 /* FirebaseAnalytics */,
+				E769389E2C98818D00C9F9C6 /* FirebaseInAppMessaging-Beta */,
+				E76938A02C98818D00C9F9C6 /* FirebaseMessaging */,
+				E76938A22C98818D00C9F9C6 /* FirebaseRemoteConfig */,
+			);
 			productName = CNotifySDK;
 			productReference = E769388D2C987EDB00C9F9C6 /* CNotifySDK.framework */;
 			productType = "com.apple.product-type.framework";
@@ -108,6 +128,9 @@
 				Base,
 			);
 			mainGroup = E76938832C987EDB00C9F9C6;
+			packageReferences = (
+				E769389B2C98818D00C9F9C6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = E769388E2C987EDB00C9F9C6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -132,6 +155,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E76938A52C98933200C9F9C6 /* topic_generator.swift in Sources */,
+				E769389A2C987F8C00C9F9C6 /* main.swift in Sources */,
 				E76938922C987EDB00C9F9C6 /* CNotifySDK.docc in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -352,6 +377,40 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E769389B2C98818D00C9F9C6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E769389C2C98818D00C9F9C6 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E769389B2C98818D00C9F9C6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		E769389E2C98818D00C9F9C6 /* FirebaseInAppMessaging-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E769389B2C98818D00C9F9C6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseInAppMessaging-Beta";
+		};
+		E76938A02C98818D00C9F9C6 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E769389B2C98818D00C9F9C6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		E76938A22C98818D00C9F9C6 /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E769389B2C98818D00C9F9C6 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E76938842C987EDB00C9F9C6 /* Project object */;
 }
