@@ -68,7 +68,6 @@ public class CNotifySDK: NSObject {
         let generator = CNotifyTopicGenerator()
         let topics = generator.getTopics(language: getLang(), country: getCountry(), appVersion: getAppVersion())
         topics.forEach { topic in
-            print("Subscribing to topic: \(topic)")
             subscribeTopic(topic)
         }
         
@@ -82,6 +81,7 @@ public class CNotifySDK: NSObject {
         Messaging.messaging().subscribe(toTopic: topic) { error in
             completion?(error)
         }
+        print("Subscribing to topic: \(topic)")
     }
     
     private func getLang() -> String {

@@ -9,15 +9,20 @@ import Foundation
 
 public class CNotifyTopicGenerator {
     let baseTopic = "eruka_"
-    let allUsersTopic = "all_users"
+    let allUsersTopic = "-all_users"
     let audienceSeparator = "_aud"
 
     public func getTopics(language: String, country: String, appVersion: String) -> [String] {
         var topics = [String]()
+        topics.append(buildTopic(language: language, audience: soTopic()))
         topics.append(buildTopic(language: language, audience: allUsersTopic))
         topics.append(buildTopic(language: language, audience: countryTopic(for: country)))
         topics.append(buildTopic(language: language, audience: versionTopic(for: appVersion)))
         return topics
+    }
+    
+    private func soTopic() -> String {
+        return "-os-ios"
     }
 
     private func countryTopic(for country: String) -> String {
