@@ -43,7 +43,15 @@ public class CNotifySDK: NSObject {
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
         UNUserNotificationCenter.current().requestAuthorization(
             options: authOptions,
-            completionHandler: { _, _ in }
+            completionHandler: { granted, error in
+                if granted {
+                    DispatchQueue.main.async {
+                        UIApplication.shared.registerForRemoteNotifications()
+                    }
+                } else if let error = error {
+                    print("Error requesting notification permissions: \(error)")
+                }
+            }
         )
         
         UIApplication.shared.registerForRemoteNotifications()
@@ -97,9 +105,15 @@ extension CNotifySDK: MessagingDelegate {
 }
 
 extension CNotifySDK: UNUserNotificationCenterDelegate {
+    // Handle successful registration for remote notifications
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Messaging.messaging().setAPNSToken(deviceToken, type: .unknown)
         print("Yay! Got a device token 🥳 \(deviceToken)")
+    }
+    
+    // Handle registration failure
+    public func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("Failed to register for remote notifications: \(error)")
     }
 
     public func userNotificationCenter(_ center: UNUserNotificationCenter,
