@@ -24,7 +24,6 @@ public class CNotifySDK: NSObject {
     
     public func testingMode() {
         subscribeTopic("testing-debug")
-        
     }
 
     // Initialize Firebase in order to then subscribe to topics
@@ -35,7 +34,6 @@ public class CNotifySDK: NSObject {
         FirebaseApp.configure(options: options)
 
         Messaging.messaging().delegate = self
-
         UNUserNotificationCenter.current().delegate = self
         requestPermissions()
     }
@@ -99,6 +97,11 @@ extension CNotifySDK: MessagingDelegate {
 }
 
 extension CNotifySDK: UNUserNotificationCenterDelegate {
+    public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        Messaging.messaging().setAPNSToken(deviceToken, type: .unknown)
+        print("Yay! Got a device token 🥳 \(deviceToken)")
+    }
+
     public func userNotificationCenter(_ center: UNUserNotificationCenter,
                                        willPresent notification: UNNotification,
                                        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
