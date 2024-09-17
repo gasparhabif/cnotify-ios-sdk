@@ -6,7 +6,7 @@ target 'CNotifySDK' do
   use_frameworks!
 
   # Pods for CNotifySDK
-  pod 'Firebase/Core'
+  # pod 'Firebase/Core'
   pod 'Firebase/Messaging'
 
   target 'CNotifySDKTests' do
