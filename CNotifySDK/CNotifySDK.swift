@@ -36,8 +36,6 @@ public class CNotifySDK: NSObject {
         Messaging.messaging().delegate = self
         UNUserNotificationCenter.current().delegate = self
         requestPermissions()
-
-        subscribeToTopics()
     }
 
     // Request Notification Permissions
@@ -49,7 +47,6 @@ public class CNotifySDK: NSObject {
                 if granted {
                     DispatchQueue.main.async {
                         UIApplication.shared.registerForRemoteNotifications()
-                        self.subscribeToTopics()
                     }
                 } else if let error = error {
                     print("Error requesting notification permissions: \(error)")

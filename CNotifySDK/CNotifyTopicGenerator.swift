@@ -29,7 +29,7 @@ public class CNotifyTopicGenerator {
     }
 
     private func langTopic(for lang: String) -> String {
-        return "-lang-\(lang)"
+        return "lang-\(lang)"
     }
 
 
