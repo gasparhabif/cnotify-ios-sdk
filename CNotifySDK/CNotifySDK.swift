@@ -14,12 +14,12 @@ import UIKit
 public class CNotifySDK: NSObject {
     public static let shared = CNotifySDK(contentsOfFile: "")
     var firebaseFilePath = ""
+    var subscribedToTopics = false
 
     public init(contentsOfFile file: String) {
         super.init()
         firebaseFilePath = file
         initializeFirebase()
-        subscribeToTopics()
     }
     
     public func testingMode() {
@@ -36,6 +36,8 @@ public class CNotifySDK: NSObject {
         Messaging.messaging().delegate = self
         UNUserNotificationCenter.current().delegate = self
         requestPermissions()
+
+        subscribeToTopics()
     }
 
     // Request Notification Permissions
@@ -47,6 +49,7 @@ public class CNotifySDK: NSObject {
                 if granted {
                     DispatchQueue.main.async {
                         UIApplication.shared.registerForRemoteNotifications()
+                        self.subscribeToTopics()
                     }
                 } else if let error = error {
                     print("Error requesting notification permissions: \(error)")
@@ -59,11 +62,21 @@ public class CNotifySDK: NSObject {
     
     // Subscribe to all calculated topics
     private func subscribeToTopics() {
+        if subscribedToTopics {
+            print("Tried to subscribe to topics but already subscribed")
+            return
+        }
+        
+        print("Starting topic subscription")
         let generator = CNotifyTopicGenerator()
         let topics = generator.getTopics(language: getLang(), country: getCountry(), appVersion: getAppVersion())
         topics.forEach { topic in
+            print("Subscribing to topic: \(topic)")
             subscribeTopic(topic)
         }
+        
+        subscribedToTopics = true
+        print("Topic subscription ended")
     }
     
 
@@ -91,7 +104,7 @@ public class CNotifySDK: NSObject {
     }
     
     private func getAppVersion() -> String {
-        return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0";
+        return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.0";
     }
 
     
@@ -108,7 +121,17 @@ extension CNotifySDK: UNUserNotificationCenterDelegate {
     // Handle successful registration for remote notifications
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Messaging.messaging().setAPNSToken(deviceToken, type: .unknown)
-        print("Yay! Got a device token 🥳 \(deviceToken)")
+        print("Yay! Got a device token 🥳")
+        
+        // Explicitly retrieve the FCM token after setting the APNS token
+        Messaging.messaging().token { token, error in
+            if let error = error {
+                print("Error fetching FCM registration token: \(error)")
+            } else if let token = token {
+                print("FCM registration token: \(token)")
+                self.subscribeToTopics()
+            }
+        }
     }
     
     // Handle registration failure
