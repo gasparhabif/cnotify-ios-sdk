@@ -15,15 +15,13 @@ public class CNotifySDK: NSObject {
     public static let shared = CNotifySDK(contentsOfFile: "")
     var firebaseFilePath = ""
     var subscribedToTopics = false
+    var testingMode = false
 
-    public init(contentsOfFile file: String) {
+    public init(contentsOfFile file: String, testing: Bool = false) {
         super.init()
         firebaseFilePath = file
+        testingMode = testing
         initializeFirebase()
-    }
-    
-    public func testingMode() {
-        subscribeTopic("testing-debug")
     }
 
     // Initialize Firebase in order to then subscribe to topics
@@ -70,6 +68,10 @@ public class CNotifySDK: NSObject {
         topics.forEach { topic in
             subscribeTopic(topic)
         }
+
+        if(testingMode) {
+            subscribeTopic("testing-debug")
+        }
         
         subscribedToTopics = true
         print("Topic subscription ended")
@@ -110,7 +112,8 @@ public class CNotifySDK: NSObject {
 extension CNotifySDK: MessagingDelegate {
     // In the future, Send this token to your server to associate it with the user for targeted notifications.
     public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        print("Firebase registration token: \(String(describing: fcmToken))")
+        print("Firebase registration token received")
+//        print("Firebase registration token: \(String(describing: fcmToken))")
     }
 }
 
