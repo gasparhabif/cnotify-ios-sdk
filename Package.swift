@@ -18,7 +18,7 @@ let package = Package(
     targets: [
         .target(
             name: "CNotifySDK",
-            dependencies: ["FirebaseMessaging"]),
+            dependencies: ["firebase-ios-sdk"]),
         .testTarget(
             name: "CNotifySDKTests",
             dependencies: ["CNotifySDK"]),
