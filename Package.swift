@@ -14,6 +14,7 @@ let package = Package(
     dependencies: [
         // Add any dependencies here, like Firebase
         .package(
+            name: "Firebase",
             url: "https://github.com/firebase/firebase-ios-sdk.git",
             .upToNextMajor(from: "10.4.0")
         )
