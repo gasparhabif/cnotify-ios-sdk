@@ -1,0 +1,3 @@
+[submodule "firebase-ios-sdk"]
+	path = firebase-ios-sdk
+	url = https://github.com/firebase/firebase-ios-sdk.git

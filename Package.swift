@@ -12,21 +12,23 @@ let package = Package(
             targets: ["CNotifySDK"]),
     ],
     dependencies: [
-        // Add any dependencies here, like Firebase
         .package(
             name: "Firebase",
             url: "https://github.com/firebase/firebase-ios-sdk.git",
-            .upToNextMajor(from: "10.4.0")
+            .upToNextMajor(from: "10.0.0")
         )
     ],
     targets: [
         .target(
             name: "CNotifySDK",
             dependencies: [
-                .product(name: "FirebaseMessaging", package: "Firebase"),
-            ]),
+                .product(name: "FirebaseMessaging", package: "Firebase")
+            ],
+            path: "CNotifySDK"
+        ),
         .testTarget(
             name: "CNotifySDKTests",
-            dependencies: ["CNotifySDK"]),
+            dependencies: ["CNotifySDK"],
+            path: "CNotifySDKTests"),
     ]
 )
