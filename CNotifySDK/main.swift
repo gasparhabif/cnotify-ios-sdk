@@ -69,11 +69,19 @@ public class CNotifySDK: NSObject {
     }
     
     private func getLang() -> String {
-        return Locale.current.language.languageCode?.identifier ?? "en"
+        if #available(iOS 16, *) {
+            return Locale.current.language.languageCode?.identifier ?? "en"
+        } else {
+            return Locale.current.languageCode ?? "en"
+        }
     }
     
     private func getCountry() -> String {
-        return Locale.current.region?.identifier ?? "??";
+        if #available(iOS 16, *) {
+            return Locale.current.region?.identifier ?? "??";
+        } else {
+            return Locale.current.regionCode ?? "??"
+        }
     }
     
     private func getAppVersion() -> String {
@@ -96,7 +104,12 @@ extension CNotifySDK: UNUserNotificationCenterDelegate {
                                        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
         print("Received notification: \(userInfo)")
-        completionHandler([[.list, .banner, .sound]])
+        if #available(iOS 14, *) {
+            completionHandler([[.list, .banner, .sound]])
+        } else {
+            completionHandler([[.alert, .sound]])
+        }
+        
     }
     
     public func userNotificationCenter(_ center: UNUserNotificationCenter,

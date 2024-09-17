@@ -25,7 +25,7 @@ Pod::Spec.new do |spec|
   #   * Write the description between the DESC delimiters below.
   #   * Finally, don't worry about the indent, CocoaPods strips it!
   spec.description  = <<-DESC
-  This SDK is used to connect the integration with cnotify.me.
+    This SDK is used to connect the integration with cnotify.me. It provides functionality for handling push notifications and integrating with the cnotify.me service.
                    DESC
 
   spec.homepage     = "https://cnotify.me"
@@ -65,6 +65,9 @@ Pod::Spec.new do |spec|
   #
 
   spec.platform     = :ios
+  spec.ios.deployment_target = "13.0"
+  spec.swift_version = "4.0"
+
   # spec.platform     = :ios, "5.0"
 
   #  When using multiple platforms
@@ -81,7 +84,8 @@ Pod::Spec.new do |spec|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  spec.source       = { :git => "https://github.com/gasparhabif/cnotify-ios-sdk.git", :tag => "#{spec.version}" }
+  # IF We want to use tags for versions => :tag => "#{spec.version}"
+  spec.source       = { :git => "https://github.com/gasparhabif/cnotify-ios-sdk.git", :branch => "main" }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -92,7 +96,7 @@ Pod::Spec.new do |spec|
   #  Not including the public_header_files will make all headers public.
   #
 
-  spec.source_files  = "Classes", "Classes/**/*.{h,m}"
+  spec.source_files  = "CNotifySDK/**/*.{h,m,swift}"
   spec.exclude_files = "Classes/Exclude"
 
   # spec.public_header_files = "Classes/**/*.h"
