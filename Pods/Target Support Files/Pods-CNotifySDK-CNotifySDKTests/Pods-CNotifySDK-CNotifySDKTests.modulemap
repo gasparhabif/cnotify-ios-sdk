@@ -1,0 +1,6 @@
+framework module Pods_CNotifySDK_CNotifySDKTests {
+  umbrella header "Pods-CNotifySDK-CNotifySDKTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
