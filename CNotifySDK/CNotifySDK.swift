@@ -25,7 +25,6 @@ public class CNotifySDK: NSObject {
 
     // Initialize Firebase in order to then subscribe to topics
     private func initializeFirebase() {
-        let sdkVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "Unknown" 
         printCNotifySDK("Initializing (Version: 0.2.10)")
         // Check if Firebase is already configured
         if FirebaseApp.app() == nil {
