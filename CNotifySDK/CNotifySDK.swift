@@ -10,7 +10,6 @@ import FirebaseCore
 import FirebaseMessaging
 import UIKit
 
-
 public class CNotifySDK: NSObject {
     public static let shared = CNotifySDK(contentsOfFile: "")
     var firebaseFilePath = ""
@@ -26,16 +25,17 @@ public class CNotifySDK: NSObject {
 
     // Initialize Firebase in order to then subscribe to topics
     private func initializeFirebase() {
-        let sdkVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unknown" 
-        print("Initializing CNotifySDK (Version: \(sdkVersion))")
+        let sdkVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "Unknown" 
+        printCNotifySDK("Initializing (Version: 0.2.8)")
         // Check if Firebase is already configured
         if FirebaseApp.app() == nil {
+            printCNotifySDK("Configuring Firebase app")
             guard let options = FirebaseOptions(contentsOfFile: firebaseFilePath) else {
                 fatalError("Failed to load Firebase configuration from file: \(firebaseFilePath). Check the file exists in that location and it's correctly formatted.")
             }
             FirebaseApp.configure(options: options)
         } else {
-            print("Firebase app is already configured.")
+            printCNotifySDK("Firebase app is already configured.")
         }
 
         Messaging.messaging().delegate = self
@@ -54,7 +54,7 @@ public class CNotifySDK: NSObject {
                         UIApplication.shared.registerForRemoteNotifications()
                     }
                 } else if let error = error {
-                    print("Error requesting notification permissions: \(error)")
+                    printCNotifySDK("Error requesting notification permissions: \(error)")
                 }
             }
         )
@@ -65,11 +65,11 @@ public class CNotifySDK: NSObject {
     // Subscribe to all calculated topics
     private func subscribeToTopics() {
         if subscribedToTopics {
-            print("Tried to subscribe to topics but already subscribed")
+            printCNotifySDK("Tried to subscribe to topics but already subscribed")
             return
         }
         
-        print("Starting topic subscription")
+        printCNotifySDK("Starting topic subscription")
         let generator = CNotifyTopicGenerator()
         let topics = generator.getTopics(language: getLang(), country: getCountry(), appVersion: getAppVersion())
         topics.forEach { topic in
@@ -81,7 +81,7 @@ public class CNotifySDK: NSObject {
         }
         
         subscribedToTopics = true
-        print("Topic subscription ended")
+        printCNotifySDK("Topic subscription ended")
     }
     
 
@@ -90,7 +90,7 @@ public class CNotifySDK: NSObject {
         Messaging.messaging().subscribe(toTopic: topic) { error in
             completion?(error)
         }
-        print("Subscribing to topic: \(topic)")
+        printCNotifySDK("Subscribing to topic: \(topic)")
     }
     
     private func getLang() -> String {
@@ -113,13 +113,15 @@ public class CNotifySDK: NSObject {
         return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.0";
     }
 
-    
+    private func printCNotifySDK(_ message: String) {
+        print("[CNotifySDK] \(message)")
+    }
 }
 
 extension CNotifySDK: MessagingDelegate {
     // In the future, Send this token to your server to associate it with the user for targeted notifications.
     public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        print("Firebase registration token received")
+        printCNotifySDK("Firebase registration token received")
 //        print("Firebase registration token: \(String(describing: fcmToken))")
     }
 }
@@ -128,14 +130,14 @@ extension CNotifySDK: UNUserNotificationCenterDelegate {
     // Handle successful registration for remote notifications
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Messaging.messaging().setAPNSToken(deviceToken, type: .unknown)
-        print("Yay! Got a device token 🥳")
+        printCNotifySDK("Yay! Got a device token 🥳")
         
         // Explicitly retrieve the FCM token after setting the APNS token
         Messaging.messaging().token { token, error in
             if let error = error {
-                print("Error fetching FCM registration token: \(error)")
+                printCNotifySDK("Error fetching FCM registration token: \(error)")
             } else if let token = token {
-                print("FCM registration token: \(token)")
+                printCNotifySDK("FCM registration token: \(token)")
                 self.subscribeToTopics()
             }
         }
@@ -143,14 +145,14 @@ extension CNotifySDK: UNUserNotificationCenterDelegate {
     
     // Handle registration failure
     public func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print("Failed to register for remote notifications: \(error)")
+        printCNotifySDK("Failed to register for remote notifications: \(error)")
     }
 
     public func userNotificationCenter(_ center: UNUserNotificationCenter,
                                        willPresent notification: UNNotification,
                                        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
-        print("Received notification: \(userInfo)")
+        printCNotifySDK("Received notification: \(userInfo)")
         if #available(iOS 14, *) {
             completionHandler([[.list, .banner, .sound]])
         } else {
@@ -163,7 +165,7 @@ extension CNotifySDK: UNUserNotificationCenterDelegate {
                                        didReceive response: UNNotificationResponse,
                                        withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
-        print("Received notification response: \(userInfo)")
+        printCNotifySDK("Received notification response: \(userInfo)")
         completionHandler()
     }
 }

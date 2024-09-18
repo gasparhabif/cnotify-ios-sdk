@@ -1,7 +1,7 @@
 # CNotify SDK - iOS
 
 ## Updating Version
-1. Change the version in the `CNotifySDK.podspec` file.
+1. Change the version in the `CNotifySDK.podspec` file and in the CNotifySDK.swift print as well.
 2. Run the following command to push the new version to the CocoaPods repository:
 ```bash
 pod trunk push CNotifySDK.podspec
