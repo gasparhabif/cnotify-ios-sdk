@@ -29,7 +29,9 @@ public class CNotifySDK: NSObject {
         guard let options = FirebaseOptions(contentsOfFile: firebaseFilePath) else {
             fatalError("Failed to load Firebase configuration from file: \(firebaseFilePath). Check the file exists in that location and it's correctly formatted.")
         }
-        FirebaseApp.configure(options: options)
+        if FirebaseApp.app() == nil {
+            FirebaseApp.configure(options: options)
+        }
 
         Messaging.messaging().delegate = self
         UNUserNotificationCenter.current().delegate = self
