@@ -26,11 +26,16 @@ public class CNotifySDK: NSObject {
 
     // Initialize Firebase in order to then subscribe to topics
     private func initializeFirebase() {
-        guard let options = FirebaseOptions(contentsOfFile: firebaseFilePath) else {
-            fatalError("Failed to load Firebase configuration from file: \(firebaseFilePath). Check the file exists in that location and it's correctly formatted.")
-        }
+        let sdkVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "Unknown" 
+        print("Initializing CNotifySDK (Version: \(sdkVersion))")
+        // Check if Firebase is already configured
         if FirebaseApp.app() == nil {
+            guard let options = FirebaseOptions(contentsOfFile: firebaseFilePath) else {
+                fatalError("Failed to load Firebase configuration from file: \(firebaseFilePath). Check the file exists in that location and it's correctly formatted.")
+            }
             FirebaseApp.configure(options: options)
+        } else {
+            print("Firebase app is already configured.")
         }
 
         Messaging.messaging().delegate = self
