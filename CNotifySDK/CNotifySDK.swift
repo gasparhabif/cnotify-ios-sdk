@@ -26,7 +26,7 @@ public class CNotifySDK: NSObject {
     // Initialize Firebase in order to then subscribe to topics
     private func initializeFirebase() {
         let sdkVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "Unknown" 
-        printCNotifySDK("Initializing (Version: 0.2.8)")
+        printCNotifySDK("Initializing (Version: 0.2.9)")
         // Check if Firebase is already configured
         if FirebaseApp.app() == nil {
             printCNotifySDK("Configuring Firebase app")
@@ -121,7 +121,7 @@ public class CNotifySDK: NSObject {
 extension CNotifySDK: MessagingDelegate {
     // In the future, Send this token to your server to associate it with the user for targeted notifications.
     public func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        printCNotifySDK("Firebase registration token received")
+        self.printCNotifySDK("Firebase registration token received")
 //        print("Firebase registration token: \(String(describing: fcmToken))")
     }
 }
@@ -130,14 +130,14 @@ extension CNotifySDK: UNUserNotificationCenterDelegate {
     // Handle successful registration for remote notifications
     public func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Messaging.messaging().setAPNSToken(deviceToken, type: .unknown)
-        printCNotifySDK("Yay! Got a device token 🥳")
+        self.printCNotifySDK("Yay! Got a device token 🥳")
         
         // Explicitly retrieve the FCM token after setting the APNS token
         Messaging.messaging().token { token, error in
             if let error = error {
-                printCNotifySDK("Error fetching FCM registration token: \(error)")
+                self.printCNotifySDK("Error fetching FCM registration token: \(error)")
             } else if let token = token {
-                printCNotifySDK("FCM registration token: \(token)")
+                self.printCNotifySDK("FCM registration token: \(token)")
                 self.subscribeToTopics()
             }
         }
@@ -145,14 +145,14 @@ extension CNotifySDK: UNUserNotificationCenterDelegate {
     
     // Handle registration failure
     public func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        printCNotifySDK("Failed to register for remote notifications: \(error)")
+        self.printCNotifySDK("Failed to register for remote notifications: \(error)")
     }
 
     public func userNotificationCenter(_ center: UNUserNotificationCenter,
                                        willPresent notification: UNNotification,
                                        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
-        printCNotifySDK("Received notification: \(userInfo)")
+        self.printCNotifySDK("Received notification: \(userInfo)")
         if #available(iOS 14, *) {
             completionHandler([[.list, .banner, .sound]])
         } else {
@@ -165,7 +165,7 @@ extension CNotifySDK: UNUserNotificationCenterDelegate {
                                        didReceive response: UNNotificationResponse,
                                        withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
-        printCNotifySDK("Received notification response: \(userInfo)")
+        self.printCNotifySDK("Received notification response: \(userInfo)")
         completionHandler()
     }
 }
