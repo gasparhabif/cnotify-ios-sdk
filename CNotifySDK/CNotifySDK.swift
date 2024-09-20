@@ -25,7 +25,7 @@ public class CNotifySDK: NSObject {
 
     // Initialize Firebase in order to then subscribe to topics
     private func initializeFirebase() {
-        printCNotifySDK("Initializing (Version: 0.2.14)")
+        printCNotifySDK("Initializing (Version: 0.2.15)")
         // Check if Firebase is already configured
         if FirebaseApp.app() == nil {
             if !firebaseFilePath.isEmpty {
@@ -39,14 +39,13 @@ public class CNotifySDK: NSObject {
             }
         } else {
             printCNotifySDK("Firebase app is already configured.")
+            // Attempt to subscribe to topics here as well
+            attemptTopicSubscription()
         }
 
         Messaging.messaging().delegate = self
         UNUserNotificationCenter.current().delegate = self
         requestPermissions()
-        
-        // Attempt to subscribe to topics here as well
-        attemptTopicSubscription()
     }
 
     // New method to attempt topic subscription
