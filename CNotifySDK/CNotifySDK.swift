@@ -25,7 +25,7 @@ public class CNotifySDK: NSObject {
 
     // Initialize Firebase in order to then subscribe to topics
     private func initializeFirebase() {
-        printCNotifySDK("Initializing (Version: 0.2.18)")
+        printCNotifySDK("Initializing (Version: 0.3.0)")
         // Check if Firebase is already configured
         if FirebaseApp.app() == nil {
             if !firebaseFilePath.isEmpty {
@@ -50,15 +50,21 @@ public class CNotifySDK: NSObject {
     }
 
     // New method to attempt topic subscription
-    private func attemptTopicSubscription() {
-        printCNotifySDK("Attempting topic subscription")
+    private func attemptTopicSubscription(attempt: Int = 1) {
+        printCNotifySDK("Attempting topic subscription (Attempt \(attempt)/5)")
+        
+        // Check if maximum attempts reached
+        guard attempt <= 5 else {
+            printCNotifySDK("Max attempts reached. Unable to subscribe to topics.")
+            return
+        }
         
         // Check if APNS token is available
         if Messaging.messaging().apnsToken == nil {
             printCNotifySDK("APNS token not available yet. Waiting...")
             // Set up a timer to retry after a short delay
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
-                self?.attemptTopicSubscription()
+                self?.attemptTopicSubscription(attempt: attempt + 1)
             }
             return
         }
