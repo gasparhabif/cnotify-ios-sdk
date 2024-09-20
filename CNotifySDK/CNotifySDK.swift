@@ -16,7 +16,7 @@ public class CNotifySDK: NSObject {
     var subscribedToTopics = false
     var testingMode = false
 
-    public init(contentsOfFile file: String, testing: Bool = false) {
+    public init(contentsOfFile file: String = "", testing: Bool = false) {
         super.init()
         firebaseFilePath = file
         testingMode = testing
@@ -25,14 +25,18 @@ public class CNotifySDK: NSObject {
 
     // Initialize Firebase in order to then subscribe to topics
     private func initializeFirebase() {
-        printCNotifySDK("Initializing (Version: 0.2.13)")
+        printCNotifySDK("Initializing (Version: 0.2.14)")
         // Check if Firebase is already configured
         if FirebaseApp.app() == nil {
-            printCNotifySDK("Configuring Firebase app")
-            guard let options = FirebaseOptions(contentsOfFile: firebaseFilePath) else {
-                fatalError("Failed to load Firebase configuration from file: \(firebaseFilePath). Check the file exists in that location and it's correctly formatted.")
+            if !firebaseFilePath.isEmpty {
+                guard let options = FirebaseOptions(contentsOfFile: firebaseFilePath) else {
+                    fatalError("Failed to load Firebase configuration from file: \(firebaseFilePath). Check the file exists in that location and it's correctly formatted.")
+                }
+                FirebaseApp.configure(options: options)
+            } else {
+                // Use default options if no file path is provided
+                FirebaseApp.configure()
             }
-            FirebaseApp.configure(options: options)
         } else {
             printCNotifySDK("Firebase app is already configured.")
         }
@@ -47,6 +51,7 @@ public class CNotifySDK: NSObject {
 
     // New method to attempt topic subscription
     private func attemptTopicSubscription() {
+        printCNotifySDK("Attempting topic subscription")
         Messaging.messaging().token { token, error in
             if let error = error {
                 self.printCNotifySDK("Error fetching FCM registration token: \(error)")
