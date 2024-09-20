@@ -25,7 +25,7 @@ public class CNotifySDK: NSObject {
 
     // Initialize Firebase in order to then subscribe to topics
     private func initializeFirebase() {
-        printCNotifySDK("Initializing (Version: 0.2.15)")
+        printCNotifySDK("Initializing (Version: 0.2.16)")
         // Check if Firebase is already configured
         if FirebaseApp.app() == nil {
             if !firebaseFilePath.isEmpty {
@@ -75,6 +75,7 @@ public class CNotifySDK: NSObject {
                     DispatchQueue.main.async {
                         UIApplication.shared.registerForRemoteNotifications()
                     }
+                    self.attemptTopicSubscription()
                 } else if let error = error {
                     self.printCNotifySDK("Error requesting notification permissions: \(error)")
                 }
