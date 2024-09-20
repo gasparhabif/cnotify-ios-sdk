@@ -25,7 +25,7 @@ public class CNotifySDK: NSObject {
 
     // Initialize Firebase in order to then subscribe to topics
     private func initializeFirebase() {
-        printCNotifySDK("Initializing (Version: 0.2.11)")
+        printCNotifySDK("Initializing (Version: 0.2.12)")
         // Check if Firebase is already configured
         if FirebaseApp.app() == nil {
             printCNotifySDK("Configuring Firebase app")
@@ -40,15 +40,34 @@ public class CNotifySDK: NSObject {
         Messaging.messaging().delegate = self
         UNUserNotificationCenter.current().delegate = self
         requestPermissions()
+        
+        // Attempt to subscribe to topics here as well
+        attemptTopicSubscription()
+    }
+
+    // New method to attempt topic subscription
+    private func attemptTopicSubscription() {
+        Messaging.messaging().token { token, error in
+            if let error = error {
+                self.printCNotifySDK("Error fetching FCM registration token: \(error)")
+            } else if let token = token {
+                self.printCNotifySDK("FCM registration token available: \(token)")
+                self.subscribeToTopics()
+            } else {
+                self.printCNotifySDK("No FCM registration token available yet")
+            }
+        }
     }
 
     // Request Notification Permissions
     private func requestPermissions() {
+        printCNotifySDK("Checking notification permissions")
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
         UNUserNotificationCenter.current().requestAuthorization(
             options: authOptions,
             completionHandler: { granted, error in
                 if granted {
+                    printCNotifySDK("Notification permissions granted")
                     DispatchQueue.main.async {
                         UIApplication.shared.registerForRemoteNotifications()
                     }
@@ -131,15 +150,8 @@ extension CNotifySDK: UNUserNotificationCenterDelegate {
         Messaging.messaging().setAPNSToken(deviceToken, type: .unknown)
         self.printCNotifySDK("Yay! Got a device token 🥳")
         
-        // Explicitly retrieve the FCM token after setting the APNS token
-        Messaging.messaging().token { token, error in
-            if let error = error {
-                self.printCNotifySDK("Error fetching FCM registration token: \(error)")
-            } else if let token = token {
-                self.printCNotifySDK("FCM registration token: \(token)")
-                self.subscribeToTopics()
-            }
-        }
+        // Attempt topic subscription here as well
+        self.attemptTopicSubscription()
     }
     
     // Handle registration failure
