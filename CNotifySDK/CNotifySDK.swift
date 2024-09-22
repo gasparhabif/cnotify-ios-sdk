@@ -20,12 +20,19 @@ public class CNotifySDK: NSObject {
         super.init()
         firebaseFilePath = file
         testingMode = testing
+        
+        // Check if the device is a Simulator
+        #if targetEnvironment(simulator)
+            self.printCNotifySDK("WARNING: Simulator Detected. Use a real device to test notifications, iOS Simulator doesn't support notifications.")
+            return
+        #endif
+        
         initializeFirebase()
     }
 
     // Initialize Firebase in order to then subscribe to topics
     private func initializeFirebase() {
-        printCNotifySDK("Initializing (Version: 0.3.0)")
+        printCNotifySDK("Initializing (Version: 0.3.1)")
         // Check if Firebase is already configured
         if FirebaseApp.app() == nil {
             if !firebaseFilePath.isEmpty {
