@@ -22,17 +22,17 @@ public class CNotifySDK: NSObject {
         testingMode = testing
         
         // Check if the device is a Simulator
-        #if targetEnvironment(simulator)
+        #if !targetEnvironment(simulator)
+            initializeFirebase()
+        #else
             self.printCNotifySDK("WARNING: Simulator Detected. Use a real device to test notifications, iOS Simulator doesn't support notifications.")
-            return
         #endif
         
-        initializeFirebase()
     }
 
     // Initialize Firebase in order to then subscribe to topics
     private func initializeFirebase() {
-        printCNotifySDK("Initializing (Version: 0.3.1)")
+        printCNotifySDK("Initializing (Version: 0.4.0)")
         // Check if Firebase is already configured
         if FirebaseApp.app() == nil {
             if !firebaseFilePath.isEmpty {
@@ -117,10 +117,23 @@ public class CNotifySDK: NSObject {
             printCNotifySDK("Tried to subscribe to topics but already subscribed")
             return
         }
-        
         printCNotifySDK("Starting topic subscription")
+
         let generator = CNotifyTopicGenerator()
         let topics = generator.getTopics(language: getLang(), country: getCountry(), appVersion: getAppVersion())
+
+        let storage = CNotifyTopicStorage()
+        let previousTopics = storage.getSubscribedTopics()
+
+        // If any of the previous topics is different to the new topics, unsubscribe from the previous topics and subscribe to the new topics
+        if previousTopics.count != topics.count {
+            for topic in previousTopics {
+                if !topics.contains(topic) {
+                    unsubscribeFromTopic(topic)
+                }
+            }
+        }
+
         topics.forEach { topic in
             subscribeTopic(topic)
         }
@@ -140,6 +153,13 @@ public class CNotifySDK: NSObject {
             completion?(error)
         }
         printCNotifySDK("Subscribing to topic: \(topic)")
+    }
+
+    private func unsubscribeFromTopic(_ topic: String, completion: ((Error?) -> Void)? = nil) {
+        Messaging.messaging().unsubscribe(fromTopic: topic) { error in
+            completion?(error)
+        }
+        printCNotifySDK("Unsubscribing from topic: \(topic)")
     }
     
     private func getLang() -> String {
