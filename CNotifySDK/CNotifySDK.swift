@@ -32,7 +32,7 @@ public class CNotifySDK: NSObject {
 
     // Initialize Firebase in order to then subscribe to topics
     private func initializeFirebase() {
-        printCNotifySDK("Initializing (Version: 0.4.0)")
+        printCNotifySDK("Initializing (Version: 0.4.1)")
         // Check if Firebase is already configured
         if FirebaseApp.app() == nil {
             if !firebaseFilePath.isEmpty {
@@ -125,17 +125,18 @@ public class CNotifySDK: NSObject {
         let storage = CNotifyTopicStorage()
         let previousTopics = storage.getSubscribedTopics()
 
-        // If any of the previous topics is different to the new topics, unsubscribe from the previous topics and subscribe to the new topics
-        if previousTopics.count != topics.count {
+        // Check if any topic is different
+        if Set(topics) != Set(previousTopics) {
+            // Unsubscribe from all previous topics
             for topic in previousTopics {
-                if !topics.contains(topic) {
-                    unsubscribeFromTopic(topic)
-                }
+                unsubscribeFromTopic(topic)
             }
-        }
-
-        topics.forEach { topic in
-            subscribeTopic(topic)
+            
+            // Subscribe to all new topics
+            storage.persistSubscribedTopics(topics: topics)
+            topics.forEach { topic in
+                subscribeTopic(topic)
+            }
         }
 
         if(testingMode) {

@@ -1,3 +1,5 @@
+import Foundation
+
 public class CNotifyTopicStorage {
     let topicsKey = "cnotify_subscribed_topics"
     
