@@ -8,7 +8,7 @@
 import Foundation
 
 public class CNotifyTopicGenerator {
-    let baseTopic = "eruka_"
+    let baseTopic = "cnotify_"
     let allUsersTopic = "-all_users"
     let audienceSeparator = "_aud"
 
